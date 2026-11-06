@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+dist/
+coverage/
+*.log
+__pycache__/
+.DS_Store
+*.pem
+*.key
+private-data/
+payroll-exports/
+backups/

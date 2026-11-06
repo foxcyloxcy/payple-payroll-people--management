@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "status": "draft",
+  "currency": "PHP",
+  "timezone": "Asia/Manila",
+  "salesPolicy": {
+    "commissionSource": "branch_worked_daily_sales",
+    "valueBasis": null,
+    "splitBranchPolicy": null
+  },
+  "schedules": [
+    {
+      "id": "demo-15-30",
+      "frequency": "twice_monthly",
+      "monthlyPaydays": [
+        15,
+        30
+      ],
+      "shortMonthPolicy": "last_calendar_day",
+      "nonWorkingDayPolicy": null,
+      "cutoffPolicy": null
+    },
+    {
+      "id": "demo-5-20",
+      "frequency": "twice_monthly",
+      "monthlyPaydays": [
+        5,
+        20
+      ],
+      "shortMonthPolicy": "last_calendar_day",
+      "nonWorkingDayPolicy": null,
+      "cutoffPolicy": null
+    },
+    {
+      "id": "demo-weekly",
+      "frequency": "weekly",
+      "weeklyPayday": "friday",
+      "shortMonthPolicy": "last_calendar_day",
+      "nonWorkingDayPolicy": null,
+      "cutoffPolicy": null
+    }
+  ],
+  "employeePlans": [
+    {
+      "employeeId": "demo-manager",
+      "role": "manager",
+      "effectiveFrom": "2026-11-01",
+      "planType": "minimum_base_plus_commission",
+      "amountMinorUnits": 65000,
+      "baseUnit": "daily",
+      "commissionEnabled": true,
+      "commissionBasisPoints": 300,
+      "scheduleId": "demo-15-30"
+    },
+    {
+      "employeeId": "demo-photographer",
+      "role": "photographer",
+      "effectiveFrom": "2026-11-01",
+      "planType": "basic_plus_commission",
+      "amountMinorUnits": 65000,
+      "baseUnit": "daily",
+      "commissionEnabled": true,
+      "commissionBasisPoints": 500,
+      "scheduleId": "demo-5-20"
+    },
+    {
+      "employeeId": "demo-fixed-daily",
+      "role": "photographer",
+      "effectiveFrom": "2026-11-01",
+      "planType": "fixed_daily",
+      "amountMinorUnits": 70000,
+      "baseUnit": "daily",
+      "commissionEnabled": false,
+      "commissionBasisPoints": 0,
+      "scheduleId": "demo-weekly"
+    }
+  ]
+}

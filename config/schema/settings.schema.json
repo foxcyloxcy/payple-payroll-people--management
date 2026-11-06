@@ -1,0 +1,347 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Photography business settings \u2014 initial structural contract",
+  "description": "Business validation, authorization, version overlap checks and calendar previews are required in addition to this schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "synthetic",
+    "status",
+    "currency",
+    "timezone",
+    "salesPolicy",
+    "schedules",
+    "employeePlans"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "synthetic": {
+      "const": true
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "published"
+      ]
+    },
+    "currency": {
+      "const": "PHP"
+    },
+    "timezone": {
+      "const": "Asia/Manila"
+    },
+    "salesPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commissionSource",
+        "valueBasis",
+        "splitBranchPolicy"
+      ],
+      "properties": {
+        "commissionSource": {
+          "const": "branch_worked_daily_sales"
+        },
+        "valueBasis": {
+          "enum": [
+            "gross",
+            "net",
+            "collected",
+            null
+          ]
+        },
+        "splitBranchPolicy": {
+          "enum": [
+            "primary_branch",
+            "approved_time_allocation",
+            "explicit_branch_fractions",
+            null
+          ]
+        }
+      }
+    },
+    "schedules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/schedule"
+      }
+    },
+    "employeePlans": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/employeePlan"
+      }
+    }
+  },
+  "$defs": {
+    "payday": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31
+        },
+        {
+          "const": "last_day"
+        }
+      ]
+    },
+    "schedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "frequency",
+        "shortMonthPolicy",
+        "nonWorkingDayPolicy",
+        "cutoffPolicy"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "frequency": {
+          "enum": [
+            "weekly",
+            "twice_monthly"
+          ]
+        },
+        "weeklyPayday": {
+          "enum": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ]
+        },
+        "monthlyPaydays": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/payday"
+          }
+        },
+        "shortMonthPolicy": {
+          "const": "last_calendar_day"
+        },
+        "nonWorkingDayPolicy": {
+          "enum": [
+            "previous_business_day",
+            "next_business_day",
+            "no_adjustment",
+            null
+          ]
+        },
+        "cutoffPolicy": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Reference to a separately validated earning-window rule, not executable code."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "frequency": {
+                "const": "weekly"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "weeklyPayday"
+            ],
+            "not": {
+              "required": [
+                "monthlyPaydays"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "frequency": {
+                "const": "twice_monthly"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "monthlyPaydays"
+            ],
+            "not": {
+              "required": [
+                "weeklyPayday"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "employeePlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "employeeId",
+        "role",
+        "effectiveFrom",
+        "planType",
+        "amountMinorUnits",
+        "baseUnit",
+        "commissionEnabled",
+        "commissionBasisPoints",
+        "scheduleId"
+      ],
+      "properties": {
+        "employeeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "manager",
+            "photographer"
+          ]
+        },
+        "effectiveFrom": {
+          "type": "string",
+          "format": "date"
+        },
+        "planType": {
+          "enum": [
+            "basic_plus_commission",
+            "minimum_base_plus_commission",
+            "fixed_daily"
+          ]
+        },
+        "amountMinorUnits": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "baseUnit": {
+          "enum": [
+            "daily",
+            "hourly",
+            "monthly"
+          ]
+        },
+        "commissionEnabled": {
+          "type": "boolean"
+        },
+        "commissionBasisPoints": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "scheduleId": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "planType": {
+                "const": "fixed_daily"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "baseUnit": {
+                "const": "daily"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "planType": {
+                "enum": [
+                  "basic_plus_commission",
+                  "minimum_base_plus_commission"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "commissionEnabled": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "commissionEnabled": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "commissionBasisPoints": {
+                "const": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "published"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "salesPolicy": {
+            "properties": {
+              "valueBasis": {
+                "type": "string"
+              },
+              "splitBranchPolicy": {
+                "type": "string"
+              }
+            }
+          },
+          "schedules": {
+            "items": {
+              "properties": {
+                "nonWorkingDayPolicy": {
+                  "type": "string"
+                },
+                "cutoffPolicy": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
