@@ -95,3 +95,9 @@ Store at least:
 ## Setup still needed
 
 Actual business/domain and branch details, employee rates, basic/minimum amount units, sales adjustments policy, cutoff windows, fixed-daily commission choice, split-branch rule, attendance method and statutory module coverage. These become admin setup choices; they do not require custom code for every employee.
+
+## Implementation status — 7 November 2026
+
+Implemented: daily pay amounts and individual percentages; additive basic/minimum plans; fixed daily plans with a zero or positive commission; version publication and illustrative preview; weekly/twice-monthly calendars; current employee branch/role assignment and deactivation; company display name and intended domain field. Changes are persisted and audited, with finalized earnings snapshots protected.
+
+First-release restrictions: base units are daily; assignment changes apply now; missing-punch/break/split-day corrections are not automated; earning cutoffs are selected for each gross draft; calendar exceptions do not auto-shift holidays; changing gross/net policy after existing reports requires a reviewed migration. Domain settings do not perform DNS provisioning. These limits are visible where they affect an admin decision and documented in the README.

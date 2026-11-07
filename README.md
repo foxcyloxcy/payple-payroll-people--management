@@ -1,51 +1,46 @@
-# Payple — Payroll & People Management
+# Payple — People, prints & payroll
 
-Planning foundation for a Philippine photography business with multiple branches or booths.
+A working first release for Philippine photography teams with multiple branches or booths.
 
-## Current status
+## What works
 
-Requirements, architecture and admin-settings contracts are prepared. The website, API, database, authentication, payroll engine and deployment are **not implemented yet**. Configuration examples are synthetic and are not production payroll settings.
+- Responsive landing page, sign-in entry, and admin/manager/photographer workspaces.
+- Isolated sample workspace with fictional records and three explorable roles.
+- Persistent branch and employee records, current branch/role assignments and account deactivation.
+- Daily branch sales and physical-print reports, including usable originals, replacements and waste.
+- Draft/submitted/returned/approved report workflow; branch scopes checked on the server.
+- Time in/out, reviewed workdays and protected self-approval/cross-branch rules.
+- Individual daily base/minimum/fixed-pay amounts and branch-sales commission percentages with effective-dated versions.
+- Weekly and twice-monthly payday calendars, including 15/30 and 5/20 with short-month fallback.
+- Gross-earnings preparation, immutable approval snapshots, duplicate-period prevention, per-person published statements and CSV export.
+- Daily after-pay balances, including negative results; no cap of earned pay to branch sales.
+- Persistent D1 storage with optimistic revision checks, change audit and same-origin mutation protection.
 
-## Product
+## Run and check
 
-- Public landing page and staff login.
-- Admin portal at `admin.<domain>`, manager portal at `manager.<domain>`, and proposed photographer portal at `staff.<domain>`.
-- Physical print counts, waste, reprints and daily branch sales.
-- Attendance, dated branch assignments and transparent branch results.
-- Per-person branch-sales commission percentages.
-- Basic/minimum base pay plus commission, or fixed daily pay with an explicit commission setting.
-- Weekly or configurable twice-monthly payroll, including 15/30 and 5/20 examples.
-- Admin-editable settings, impact previews, effective dates, audit history and protected finalized payroll.
+Requires Node.js 22.13 or newer. The committed lockfile specifies the dependencies.
 
-## Read these first
+```sh
+npm ci
+npm run check
+npm test
+npm run build
+```
 
-| Document | Purpose |
-| --- | --- |
-| [Product plan](docs/product-plan.md) | Full requirements, permissions, workflows, data model and milestones |
-| [Admin settings](docs/admin-settings.md) | What admin can edit and how rules are published |
-| [Architecture](docs/architecture.md) | Proposed application/modules, data ownership and request flows |
-| [Decisions](docs/decisions.md) | Confirmed choices and remaining setup decisions |
-| [Progress](docs/progress.md) | What exists, what is pending and next implementation work |
-| [Example settings](config/examples/company.json) | Synthetic draft illustrating configurable plans and calendars |
-| [Settings schema](config/schema/settings.schema.json) | Initial structural contract, not a full business-rule validator |
+Before opening a local database-backed preview, apply the generated migration using the commands in [development](docs/development.md). `npm run dev` runs the app with local bindings. Hosted sign-in is platform-managed; the portable starter provides loopback-only development auth. See [runtime starter](docs/runtime-starter.md).
 
-## Proposed stack and build sequence
+The optional `npm run test:http` script targets a directly reachable local preview and never sends real identity headers. The managed preview runs in a separate network namespace here, so that script was not able to connect from the executor; browser tests verified persistent operations instead.
 
-One Next.js/TypeScript application, PostgreSQL, server-side permissions and a mature authentication library. Serve role portals through explicit host routing. Database migrations and runtime tooling will be added with implementation.
+## Access and data
 
-1. Implement identities, locations, role/record permissions and portal routing.
-2. Implement versioned settings, employee compensation and work assignments with previews.
-3. Implement daily sales/production reporting, waste/reprint records and admin review.
-4. Implement attendance and correction review.
-5. Implement payroll calculations and calendars against agreed independent examples.
-6. Pilot, reconcile results, verify recovery, then deploy for live use.
+The review deployment is private. Its first authenticated owner opens an empty live workspace. Employees added by an admin match verified sign-in emails and bind to stable identities. This hosted version uses Sign in with ChatGPT; it does not implement separate staff passwords. Manager and photographer access is checked for every API operation, and outgoing records are scoped. The role selector exists only for synthetic demo data in a separate database namespace.
 
-## Configuration versus source control
+Live settings and payroll records belong in the database, not Git. `.env`, local state, private exports and credentials are ignored. The source lives in [foxcyloxcy/payple-payroll-people--management](https://github.com/foxcyloxcy/payple-payroll-people--management).
 
-GitHub stores code, documentation, migrations, tests and synthetic fixtures. Live settings, employee details, attendance, payroll and audit events belong in the application database/private storage. Changing an admin setting must not require a deployment.
+## Boundaries before live payroll
 
-Selected repository: [foxcyloxcy/payple-payroll-people--management](https://github.com/foxcyloxcy/payple-payroll-people--management). The user supplied this existing public repository. Preserve its visibility. Record publication through its commit history and verify the branch head before reporting a push.
+This is **gross-earnings management**, not a complete statutory payroll engine. Withholding tax, SSS/PhilHealth/Pag-IBIG, statutory benefit/holiday/overtime calculations, bank disbursement, PDF payslips, historical correction workflows and automated holiday payday shifts are not implemented. Payroll cutoff periods are explicit when preparing a draft, not inferred from paydays. Basic/minimum amounts use a daily basis in this release.
 
-## Running the application
+Role paths `/admin`, `/manager` and `/staff` work on the hosted origin. Actual custom subdomains need a business domain, hosting/DNS configuration and a verified cross-subdomain sign-in setup; entering a domain in Settings records the intended domain only.
 
-There is no runnable application yet. Do not invent setup commands, working URLs or deployment claims. Continue from [Progress](docs/progress.md).
+See [progress](docs/progress.md), [architecture](docs/architecture.md), [admin settings](docs/admin-settings.md), [product plan](docs/product-plan.md) and [decisions](docs/decisions.md).

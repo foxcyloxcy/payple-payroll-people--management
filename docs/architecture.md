@@ -41,3 +41,11 @@ Store source, migrations, docs, tests and synthetic config examples in `foxcylox
 Build login/role and record permissions, branch management, employee assignment, and admin configuration with an impact preview. Demonstrate an individual percentage change, a daily branch-sales example and both payday presets before extending reporting/payroll.
 
 End-to-end validation must include direct unauthorized requests, cross-branch data attempts, negative after-pay balance, reprint/waste reconciliation, historical rates, missing inputs, duplicate processing and short-month schedule behavior.
+
+## Implemented runtime — 7 November 2026
+
+The first release runs React/Next-compatible Vinext on a Worker with Drizzle/D1. Runtime code is in `app/`, business/permission rules in `lib/domain.ts`, the protected API in `app/api/workspace/route.ts`, and the migration-owned aggregate in `db/schema.ts`. This supersedes PostgreSQL as the current hosting implementation without claiming a production migration to it.
+
+Sites supplies verified identity. A private owner's first visit creates the empty live workspace. Membership is bound to stable verified identity after matching an admin-added email. All API writes validate role/branch scope and revision; reads remove colleagues' compensation/private statements before serialization. The demo namespace uses synthetic data and separate cookies, never the live identity namespace.
+
+Current role paths replace the workspace path after verified membership resolves. Server API authorization is independent of the requested path. Custom domains/subdomains and expanded staff sharing are pending configuration, not simulated DNS features.

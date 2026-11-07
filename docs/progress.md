@@ -1,41 +1,47 @@
 # Progress and next work
 
-Updated: 6 November 2026.
+Updated: 7 November 2026.
 
-## Prepared
+## Implemented in the first release
 
-- Product plan through version 0.5 with confirmed business requirements.
-- Role/portal and server-side permission design.
-- Print, waste, reprint and daily sales definitions.
-- Individual branch-sales commission and additive base/minimum pay design.
-- Fixed daily rate and editable weekly/twice-monthly calendar design.
-- Admin settings screens, publication lifecycle, history, previews and exception handling.
-- Proposed architecture, data model, milestones and acceptance scenarios.
-- Synthetic draft settings example and initial JSON-schema structural contract.
+- Full responsive landing page with role explanations, illustrative pay calculator and sign-in/demo entry.
+- Admin, manager and photographer views with server-side action/record scoping.
+- Verified hosted Sign in with ChatGPT, stable membership binding, private-owner bootstrap, empty live workspace and isolated synthetic demo.
+- Persistent D1 records with optimistic concurrency, same-origin JSON writes and audit events.
+- Branch creation; employee creation; current branch/role changes; deactivate/reactivate staff accounts.
+- Daily net/gross branch sales, discounts/refunds validation, usable originals, reprints and waste.
+- Report submission, admin approval/return, author draft editing, date/branch duplicate prevention and CSV export.
+- Clock in/out and independent attendance approval; workday captures its actual branch and original business date.
+- Daily basic/minimum base plus commission, fixed daily rates, per-person percentages and effective-dated versions.
+- Weekly and two-monthly-day calendars with February fallback and long-gap validation.
+- Gross-earnings drafts, missing-input exceptions, stale-source detection, overlapping approved-period prevention, locked snapshots and private statements.
+- Admin daily after-pay balance reporting; losses remain visible without capping pay.
 
-## Validation performed
+## Verified
 
-The synthetic draft passes the JSON Schema. Eight negative cases were rejected: publishing unresolved policies, negative base amount, percentage above 100%, non-daily fixed rate, disabled commission with a nonzero rate, duplicate monthly paydays, missing weekly weekday, and an invalid effective date. Local Markdown links and the full-plan copy were checked. These are structural checks, not application or payroll runtime tests.
+- 25 automated domain/permission tests pass (see `tests/domain.test.ts`).
+- TypeScript check and production Worker build pass.
+- Browser: submitted 90 usable originals + 10 reprints + 10 waste as 100 usable and 110 physical prints; approved the report.
+- Browser: photographer time in/out; manager independently approved that person's workday.
+- Browser: admin published PHP 750 daily base + 7.5% commission; the PHP 10,000 sample preview showed PHP 1,500 gross.
+- Browser: prepared and locked 5–6 November sample gross earnings; photographer saw only their PHP 1,898.25 published portion, not colleagues' entries.
+- 390px iframe layout checks: dashboard, landing, mobile navigation and pay modal; modal width stayed inside the viewport with no horizontal content overflow.
+- Local executor HTTP smoke script could not reach the managed preview daemon (connection refused). It is retained for directly reachable standalone previews; no claim that it passed here.
 
-## Not implemented
+## Deployment and source
 
-Landing page, auth, database/schema migrations, actual admin/manager/photographer screens, settings service, payroll engine, attendance, integrations, CI application checks and deployment.
+Canonical GitHub repository: `foxcyloxcy/payple-payroll-people--management` (existing public visibility preserved). The private review Site identity is tracked in `.openai/hosting.json`. A successful native deployment response and verified GitHub commit establish publication; do not infer a running website from local tests alone.
 
-## Repository and initial publication
+## Remaining before live payroll / broader staff rollout
 
-The user selected the existing public repository `foxcyloxcy/payple-payroll-people--management`. The connected GitHub account has push permission. This foundation commit contains the product plan, architecture, admin-settings specification, decisions, progress, agent instructions, synthetic draft settings, structural schema and ignore rules. The repository history is authoritative for publication. No application or deployment is included.
+Statutory tax/contribution/benefit rules and coverage, automatic overtime/holiday calculations, approved historical adjustments and missing-punch corrections, break/split-day allocation, bank payments, PDF payslips, cutoff automation, non-working-day calendar adjustment, production backup/restore and larger-scale normalized tables.
 
-## Next implementation
+Custom subdomains require the business's domain/DNS and cross-domain sign-in setup. The first release uses `/admin`, `/manager` and `/staff` paths on the hosted origin. Sharing access with actual staff is separate from adding their employee profiles.
 
-1. Provision project tooling and database; document actual local commands.
-2. Implement identity, invitations, roles and record permissions, then prove subdomain session behavior.
-3. Implement branches, employees and approved dated work assignments.
-4. Implement structured configuration drafts, validation, preview and effective-dated publication.
-5. Implement daily branch sales and production reports with review.
-6. Implement attendance and correction workflows.
-7. Implement earnings/calendar/payroll against independently specified examples.
-8. Pilot with reconciled records, access tests and a restore rehearsal.
+## Next implementation priorities
 
-## Outstanding setup
-
-Business name/domain, hosting/budget/target date, branch locations and classifications, actual pay values/units, sales adjustment policy, cutoff windows, attendance requirements, split-branch policy, approvals and statutory module coverage. See `admin-settings.md` for configurable fields.
+1. Confirm applicable branches/wage classifications and the statutory payroll scope using current official sources.
+2. Add reviewed historical correction/adjustment and partial-day/break allocation workflows.
+3. Add explicit cutoff rules, holiday-aware calendars and schedule-change previews.
+4. Configure owned domains and broader authenticated staff access when supplied/authorized.
+5. Add production backup/restore checks and normalize records before scaling.

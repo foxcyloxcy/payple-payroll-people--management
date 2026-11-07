@@ -25,3 +25,16 @@ Confirmed on 6 November 2026 unless noted otherwise.
 Do not ask the owner for a permanent universal employee percentage: admin enters individual rates in the product. Setup must still specify basic/minimum pay units, sales adjustment treatment, earning cutoffs, schedule exceptions, split-branch work rules, fixed-daily commission on/off, attendance method and statutory feature coverage.
 
 Gross versus net sales is not yet selected. PHP/Asia-Manila are proposed defaults from the confirmed Philippine operations. No branch-specific statutory wage rate has been selected.
+
+## Implementation decisions — 7 November 2026
+
+| ID | Decision | Reason / limit |
+| --- | --- | --- |
+| D16 | First hosted release uses Vinext/React, a Worker and D1/Drizzle | Supported persistent hosting with one TypeScript app; PostgreSQL remains an earlier proposal, not the deployed database |
+| D17 | Hosted authentication is verified Sign in with ChatGPT | Preserve the hosting identity integration; admin assigns membership/roles. No separate password system is claimed |
+| D18 | Review deployment remains owner-private; synthetic demo is separately namespaced | Allows safe role exploration without a live role chooser. Review first-owner bootstrap before wider sharing |
+| D19 | Initial base/minimum/fixed calculations are daily; gross earnings only | Monthly conversion and statutory net payroll require explicit rules and further validation |
+| D20 | Use role paths on the supplied hosted origin first | Actual role subdomains require an owned domain, DNS and cross-subdomain sign-in configuration |
+| D21 | Aggregate D1 row plus optimistic revision for first-release atomicity | Normalize append-heavy records before larger production scale; capacity limits are documented |
+| D22 | Current assignment changes are effective immediately; historical attendance retains its branch | Future-dated assignment scheduling and split-branch days require a separate workflow |
+| D23 | Payday calendar presets do not infer earning cutoffs | Admin explicitly chooses the earning window for each gross draft; holiday shifting is not automated |
